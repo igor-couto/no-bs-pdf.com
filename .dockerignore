@@ -1,0 +1,9 @@
+# Keep the build context small. The Dockerfile COPYs assets explicitly,
+# so these are excluded both from the context and (by definition) the image.
+.git
+.github
+.claude
+*.md
+.gitignore
+.dockerignore
+Dockerfile

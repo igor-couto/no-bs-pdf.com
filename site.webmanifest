@@ -1,0 +1,13 @@
+{
+  "name": "no-bs-pdf — Free Online PDF Editor",
+  "short_name": "no-bs-pdf",
+  "description": "Edit PDFs entirely in your browser. No uploads, no sign-up, no cookies.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f1115",
+  "theme_color": "#171a21",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

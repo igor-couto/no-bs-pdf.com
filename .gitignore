@@ -1,0 +1,14 @@
+# Dependencies (none are needed at runtime; this guards accidental installs)
+node_modules/
+package-lock.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log

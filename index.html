@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Free Online PDF Editor – Private &amp; In-Browser | no-bs-pdf</title>
+  <meta name="description" content="Edit PDF files free in your browser — add text, highlight, white-out, insert images, then merge, rotate and reorder pages. No uploads, no sign-up, no cookies." />
+  <meta name="keywords" content="online pdf editor, free pdf editor, edit pdf in browser, private pdf editor, no upload pdf editor, add text to pdf, highlight pdf, white out pdf, merge pdf, rotate pdf, reorder pdf pages" />
+  <meta name="author" content="no-bs-pdf" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#171a21" />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="canonical" href="https://no-bs-pdf.com/" />
+
+  <!-- Icons / manifest -->
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="manifest" href="site.webmanifest" />
+
+  <!-- Open Graph (Facebook, LinkedIn, …) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="no-bs-pdf" />
+  <meta property="og:title" content="Free Online PDF Editor – Private &amp; In-Browser" />
+  <meta property="og:description" content="Edit PDFs entirely in your browser. Add text, highlight, white-out, images, merge, rotate and reorder pages. No uploads, no sign-up, no cookies." />
+  <meta property="og:url" content="https://no-bs-pdf.com/" />
+  <meta property="og:image" content="https://no-bs-pdf.com/og-image.svg" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Free Online PDF Editor – Private &amp; In-Browser" />
+  <meta name="twitter:description" content="Edit PDFs in your browser. No uploads, no sign-up, no cookies — your file never leaves your device." />
+  <meta name="twitter:image" content="https://no-bs-pdf.com/og-image.svg" />
+
+  <!-- Structured data: the app itself -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "no-bs-pdf",
+    "alternateName": "Free Online PDF Editor",
+    "url": "https://no-bs-pdf.com/",
+    "description": "A free, private PDF editor that runs entirely in your web browser. Add text, draw, highlight, white-out, insert images, and reorder, rotate or merge pages — then download the result. No files are uploaded, and there are no cookies, accounts or trackers.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any (modern web browser)",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Add and edit text",
+      "Freehand pen drawing",
+      "Highlight text and regions",
+      "White-out and redact",
+      "Insert PNG and JPEG images",
+      "Reorder, rotate, duplicate and delete pages",
+      "Insert blank pages and merge other PDFs",
+      "Download the edited PDF",
+      "Works offline — files never leave the device"
+    ]
+  }
+  </script>
+
+  <!-- Structured data: FAQ (mirrors the visible FAQ below) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Is this online PDF editor free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is completely free, with no account, no sign-up and no limits. There are no ads and no trackers." } },
+      { "@type": "Question", "name": "Are my PDF files uploaded to a server?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Everything happens locally in your browser. Your file is opened, edited and saved on your own device and is never sent to any server." } },
+      { "@type": "Question", "name": "Do I need to install anything or create an account?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No installation and no account. It runs in any modern browser, and it even works offline." } },
+      { "@type": "Question", "name": "What can I edit in a PDF?",
+        "acceptedAnswer": { "@type": "Answer", "text": "You can add text, draw freehand, highlight, white-out or redact areas, and stamp images. You can also reorder, rotate, duplicate and delete pages, insert blank pages, and merge another PDF — then download the result." } },
+      { "@type": "Question", "name": "Does it work on mobile?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, it works in mobile browsers, although a larger screen is more comfortable for detailed editing." } },
+      { "@type": "Question", "name": "Is it really private? Any cookies or tracking?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No cookies, no localStorage, no analytics and no tracking of any kind. The only files loaded are the app's own code, served from the same place as the page." } }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Libraries are vendored locally (see vendor/). The app makes ZERO third-party requests.
+       Deferred so they never block first paint; defer preserves execution order. -->
+  <script src="vendor/pdf.min.js" defer></script>
+  <script src="vendor/pdf-lib.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header id="toolbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">📄</span>
+      <div>
+        <strong>no-bs-pdf</strong>
+        <small>edits stay in your browser</small>
+      </div>
+    </div>
+
+    <div class="group">
+      <button id="btnOpen" class="btn primary" title="Open a PDF">Open PDF</button>
+      <input id="fileInput" type="file" accept="application/pdf" hidden />
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="group tools" role="toolbar" aria-label="Editing tools">
+      <button class="tool" data-tool="select" title="Select / move / resize (V)">↖ Select</button>
+      <button class="tool" data-tool="text" title="Add text (T)">T Text</button>
+      <button class="tool" data-tool="pen" title="Freehand pen (P)">✎ Pen</button>
+      <button class="tool" data-tool="highlight" title="Highlight (H)">▭ Highlight</button>
+      <button class="tool" data-tool="rect" title="Rectangle (R)">◻ Rect</button>
+      <button class="tool" data-tool="whiteout" title="White-out / cover (W)">⬜ White-out</button>
+      <button class="tool" data-tool="image" title="Place an image">🖼 Image</button>
+      <input id="imageInput" type="file" accept="image/png,image/jpeg" hidden />
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="group props">
+      <label class="prop" title="Color">
+        <span>Color</span>
+        <input id="colorInput" type="color" value="#e23b3b" />
+      </label>
+      <label class="prop" title="Font size / stroke width">
+        <span id="sizeLabel">Size</span>
+        <input id="sizeInput" type="number" min="1" max="200" value="16" />
+      </label>
+      <label class="prop checkbox" title="Fill rectangle">
+        <input id="fillInput" type="checkbox" />
+        <span>Fill</span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="group">
+      <button id="btnUndo" class="btn" title="Undo (Ctrl+Z)" disabled>↩ Undo</button>
+      <button id="btnRedo" class="btn" title="Redo (Ctrl+Y)" disabled>↪ Redo</button>
+      <button id="btnDelete" class="btn" title="Delete selected (Del)" disabled>🗑 Delete</button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="group">
+      <button id="btnDownload" class="btn success" title="Download edited PDF" disabled>⬇ Download</button>
+    </div>
+  </header>
+
+  <main id="workspace" hidden>
+    <aside id="sidebar">
+      <div class="sidebar-head">
+        <span>Pages</span>
+        <div class="sidebar-actions">
+          <button id="btnAddBlank" class="mini" title="Add a blank page">＋ Blank</button>
+          <button id="btnMerge" class="mini" title="Append another PDF">＋ PDF</button>
+          <input id="mergeInput" type="file" accept="application/pdf" hidden />
+        </div>
+      </div>
+      <ol id="thumbs" aria-label="Page thumbnails"></ol>
+    </aside>
+
+    <section id="editor">
+      <div id="pagebar">
+        <div class="pagenav">
+          <button id="btnPrev" class="mini" title="Previous page">◀</button>
+          <span id="pageIndicator">– / –</span>
+          <button id="btnNext" class="mini" title="Next page">▶</button>
+        </div>
+        <div class="pageops">
+          <button id="btnRotateL" class="mini" title="Rotate page left">⟲</button>
+          <button id="btnRotateR" class="mini" title="Rotate page right">⟳</button>
+          <button id="btnDup" class="mini" title="Duplicate this page">⧉ Duplicate</button>
+          <button id="btnDelPage" class="mini danger" title="Delete this page">🗑 Page</button>
+        </div>
+        <div class="zoom">
+          <button id="btnZoomOut" class="mini" title="Zoom out">−</button>
+          <span id="zoomIndicator">100%</span>
+          <button id="btnZoomIn" class="mini" title="Zoom in">＋</button>
+          <button id="btnZoomFit" class="mini" title="Fit width">Fit</button>
+        </div>
+      </div>
+
+      <div id="canvasScroll">
+        <div id="canvasStage">
+          <canvas id="pageCanvas"></canvas>
+          <canvas id="overlayCanvas"></canvas>
+          <textarea id="textEditor" spellcheck="false" hidden></textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Landing / drop target. This is the indexable content search engines see. -->
+  <section id="dropzone">
+    <div class="landing">
+      <div class="hero" id="hero">
+        <div class="dz-icon" aria-hidden="true">📄</div>
+        <h1>Free Online PDF Editor</h1>
+        <p class="lede">
+          Edit, annotate and reorganize PDFs right in your browser.
+          <strong>No uploads, no sign-up, no cookies</strong> — your file never leaves your device.
+        </p>
+        <p class="cta">
+          <button id="dzOpen" class="btn primary big">Open a PDF</button>
+          <span class="cta-hint">or drop a file anywhere on this page</span>
+        </p>
+        <ul class="badges" aria-hidden="true">
+          <li>🔒 100% private</li>
+          <li>🍪 No cookies</li>
+          <li>📡 Works offline</li>
+          <li>♾️ Free, no limits</li>
+        </ul>
+      </div>
+
+      <section class="section" aria-labelledby="features-h">
+        <h2 id="features-h">What you can do</h2>
+        <div class="grid">
+          <article class="card"><h3>✎ Add &amp; edit text</h3><p>Click anywhere to drop a text box, choose the size and color, then move it where you want.</p></article>
+          <article class="card"><h3>🖊️ Draw &amp; highlight</h3><p>Freehand pen for signatures and notes, plus a highlighter to mark up important lines.</p></article>
+          <article class="card"><h3>⬜ White-out &amp; redact</h3><p>Cover mistakes or hide sensitive details with solid white or black boxes.</p></article>
+          <article class="card"><h3>🖼 Insert images</h3><p>Stamp a PNG or JPEG — a logo, a scanned signature, a photo — and resize it to fit.</p></article>
+          <article class="card"><h3>🔃 Reorder &amp; rotate</h3><p>Drag thumbnails to reorder, rotate sideways scans, duplicate or delete pages.</p></article>
+          <article class="card"><h3>➕ Merge &amp; combine</h3><p>Append another PDF or insert blank pages to build exactly the document you need.</p></article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="how-h">
+        <h2 id="how-h">How to edit a PDF in three steps</h2>
+        <ol class="grid steps">
+          <li class="card"><h3>1 · Open</h3><p>Choose a PDF or drag it onto the page. It opens instantly in your browser.</p></li>
+          <li class="card"><h3>2 · Edit</h3><p>Add text, draw, highlight, white-out, stamp images, and rearrange pages.</p></li>
+          <li class="card"><h3>3 · Download</h3><p>Click download to save the edited PDF straight to your device.</p></li>
+        </ol>
+      </section>
+
+      <section class="section" aria-labelledby="privacy-h">
+        <h2 id="privacy-h">Private by design — your files never leave your device</h2>
+        <p class="prose">
+          Most “free online PDF editors” upload your document to a server you have to trust.
+          This one doesn’t. Your PDF is read with the browser’s File API, edited in memory, and
+          saved back out with the browser’s own download — it is never transmitted anywhere.
+          There is no backend, no account, no cookies, no <code>localStorage</code> and no
+          analytics. The rendering and writing libraries
+          (<a href="https://mozilla.github.io/pdf.js/" rel="noopener">PDF.js</a> and
+          <a href="https://pdf-lib.js.org/" rel="noopener">pdf-lib</a>) are bundled with the
+          page, so it even works with your network disconnected.
+        </p>
+      </section>
+
+      <section class="section faq" aria-labelledby="faq-h">
+        <h2 id="faq-h">Frequently asked questions</h2>
+        <dl>
+          <dt>Is this online PDF editor free?</dt>
+          <dd>Yes. It is completely free, with no account, no sign-up and no limits. There are no ads and no trackers.</dd>
+          <dt>Are my PDF files uploaded to a server?</dt>
+          <dd>No. Everything happens locally in your browser. Your file is opened, edited and saved on your own device and is never sent to any server.</dd>
+          <dt>Do I need to install anything or create an account?</dt>
+          <dd>No installation and no account. It runs in any modern browser, and it even works offline.</dd>
+          <dt>What can I edit in a PDF?</dt>
+          <dd>Add text, draw freehand, highlight, white-out or redact, and stamp images. You can also reorder, rotate, duplicate and delete pages, insert blank pages, and merge another PDF — then download the result.</dd>
+          <dt>Does it work on mobile?</dt>
+          <dd>Yes, it works in mobile browsers, although a larger screen is more comfortable for detailed editing.</dd>
+          <dt>Is it really private? Any cookies or tracking?</dt>
+          <dd>No cookies, no localStorage, no analytics and no tracking of any kind. The only files loaded are the app’s own code, served from the same place as the page.</dd>
+        </dl>
+      </section>
+
+      <footer class="site-footer">
+        <p><strong>no-bs-pdf</strong> — a private, in-browser PDF editor. Your files stay on your device.</p>
+      </footer>
+    </div>
+  </section>
+
+  <div id="toast" hidden></div>
+</body>
+</html>
