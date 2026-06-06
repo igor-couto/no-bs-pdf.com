@@ -49,6 +49,14 @@ jobs:
             exit 1
           }
 
+      - name: Verify minified styles are current
+        run: |
+          npx --yes clean-css-cli@5 styles.css -o /tmp/styles.min.css
+          cmp -s /tmp/styles.min.css styles.min.css || {
+            echo "::error::styles.min.css is stale. Run: npx --yes clean-css-cli@5 styles.css -o styles.min.css"
+            exit 1
+          }
+
       - name: Validate JSON (manifest)
         run: node -e "JSON.parse(require('fs').readFileSync('site.webmanifest','utf8'))"
 

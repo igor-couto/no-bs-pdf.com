@@ -46,10 +46,11 @@ node .claude/serve.mjs . 8000
 
 (Any static host works in production — Netlify, GitHub Pages, S3, nginx, etc.)
 
-After changing `app.js`, regenerate the served minified file:
+After changing `app.js` or `styles.css`, regenerate the served minified files:
 
 ```powershell
 npx --yes terser@5 app.js --compress --mangle --format ascii_only=true,comments=false -o app.min.js
+npx --yes clean-css-cli@5 styles.css -o styles.min.css
 ```
 
 ## Deployment (CI/CD)
@@ -61,8 +62,9 @@ rolls it out over SSH with a smoke test and automatic rollback.
 **Pipeline**
 
 1. **Validate** (GitHub-hosted) — checks JS syntax, validates `site.webmanifest` JSON,
-   verifies `app.min.js` matches `app.js`, confirms the vendored libraries are present,
-   and warns if the placeholder domain is still set.
+   verifies `app.min.js` matches `app.js`, verifies `styles.min.css` matches
+   `styles.css`, confirms the vendored libraries are present, and warns if the
+   placeholder domain is still set.
 2. **Build & push image** (self-hosted runner) — builds the `Dockerfile` for `linux/arm64`
    and pushes `ghcr.io/<owner>/no-bs-pdf:<sha>` and `:latest`.
 3. **Deploy** (GitHub-hosted) — SSHes to the server, pulls the image, smoke-tests a
@@ -130,7 +132,8 @@ your real URL in these files:
 | File | Purpose |
 |------|---------|
 | `index.html` | markup, SEO metadata, structured data, landing content |
-| `styles.css` | styling (editor + landing page) |
+| `styles.css` | readable source styling (editor + landing page) |
+| `styles.min.css` | minified stylesheet served in production |
 | `app.js` | readable source for all editor logic (rendering, tools, page ops, export) |
 | `app.min.js` | minified app bundle served in production |
 | `vendor/` | bundled PDF.js + pdf-lib (so there are zero third-party requests) |

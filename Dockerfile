@@ -7,7 +7,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY deploy/nginx.conf /etc/nginx/conf.d/no-bs-pdf.conf
 
 # Copy ONLY the web assets — never the source/CI/docs files.
-COPY index.html styles.css app.min.js icon.svg og-image.svg site.webmanifest robots.txt sitemap.xml /usr/share/nginx/html/
+COPY index.html styles.min.css app.min.js icon.svg og-image.svg site.webmanifest robots.txt sitemap.xml /usr/share/nginx/html/
 COPY vendor/ /usr/share/nginx/html/vendor/
 
 EXPOSE 80
