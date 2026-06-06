@@ -180,6 +180,13 @@ jobs:
             sudo docker logs "$CANDIDATE_NAME" || true
             exit 1
           fi
+          for asset_path in /buy-me-a-coffe.svg /kofi.svg; do
+            if ! wait_for_http "http://127.0.0.1:${SMOKE_PORT}${asset_path}"; then
+              echo "Candidate is missing required asset: ${asset_path}"
+              sudo docker logs "$CANDIDATE_NAME" || true
+              exit 1
+            fi
+          done
           cleanup_candidate
           trap - EXIT
 
