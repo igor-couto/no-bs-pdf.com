@@ -56,7 +56,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   border-radius: 8px;
   padding: 7px 11px;
   white-space: nowrap;
-  transition: background 0.12s, border-color 0.12s, transform 0.05s;
+  transition: transform 0.05s;
 }
 .btn:hover:not(:disabled), .tool:hover:not(:disabled), .mini:hover:not(:disabled) {
   background: #2a3140;
@@ -117,7 +117,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 .thumb {
   position: relative; border: 2px solid transparent; border-radius: 8px;
-  background: var(--panel-2); padding: 6px; cursor: pointer; transition: border-color 0.12s;
+  background: var(--panel-2); padding: 6px; cursor: pointer;
 }
 .thumb.active { border-color: var(--accent); }
 .thumb.dragover { border-color: var(--success); }
@@ -172,7 +172,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .hero {
   text-align: center; padding: 44px 36px; border: 2px dashed var(--line);
-  border-radius: 18px; transition: border-color 0.15s, background 0.15s;
+  border-radius: 18px;
 }
 #dropzone.dragging .hero { border-color: var(--accent); background: #141a24; }
 .hero .dz-icon { font-size: 56px; }

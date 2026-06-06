@@ -46,6 +46,12 @@ node .claude/serve.mjs . 8000
 
 (Any static host works in production — Netlify, GitHub Pages, S3, nginx, etc.)
 
+After changing `app.js`, regenerate the served minified file:
+
+```powershell
+npx --yes terser@5 app.js --compress --mangle --format ascii_only=true,comments=false -o app.min.js
+```
+
 ## Deployment (CI/CD)
 
 `.github/workflows/cicd.yml` ships the site on every push to `main` (and via manual
@@ -55,8 +61,8 @@ rolls it out over SSH with a smoke test and automatic rollback.
 **Pipeline**
 
 1. **Validate** (GitHub-hosted) — checks JS syntax, validates `site.webmanifest` JSON,
-   confirms the vendored libraries are present, and warns if the placeholder domain is
-   still set.
+   verifies `app.min.js` matches `app.js`, confirms the vendored libraries are present,
+   and warns if the placeholder domain is still set.
 2. **Build & push image** (self-hosted runner) — builds the `Dockerfile` for `linux/arm64`
    and pushes `ghcr.io/<owner>/no-bs-pdf:<sha>` and `:latest`.
 3. **Deploy** (GitHub-hosted) — SSHes to the server, pulls the image, smoke-tests a
@@ -125,7 +131,8 @@ your real URL in these files:
 |------|---------|
 | `index.html` | markup, SEO metadata, structured data, landing content |
 | `styles.css` | styling (editor + landing page) |
-| `app.js` | all editor logic (rendering, tools, page ops, export) |
+| `app.js` | readable source for all editor logic (rendering, tools, page ops, export) |
+| `app.min.js` | minified app bundle served in production |
 | `vendor/` | bundled PDF.js + pdf-lib (so there are zero third-party requests) |
 | `icon.svg` | favicon / app icon |
 | `og-image.svg` | social share card (1200×630) |

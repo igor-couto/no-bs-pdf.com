@@ -13,7 +13,7 @@
 (() => {
   'use strict';
 
-  const ASSET_VERSION_FALLBACK = '20260606';
+  const ASSET_VERSION_FALLBACK = '20260606-2';
   const currentScript = document.currentScript;
   const assetVersion = (() => {
     if (!currentScript || !currentScript.src) return ASSET_VERSION_FALLBACK;

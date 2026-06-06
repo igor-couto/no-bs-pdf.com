@@ -38,7 +38,16 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check app.js
+          node --check app.min.js
           [ -f .claude/serve.mjs ] && node --check .claude/serve.mjs || echo "serve.mjs not committed; skipping"
+
+      - name: Verify minified app is current
+        run: |
+          npx --yes terser@5 app.js --compress --mangle --format ascii_only=true,comments=false -o /tmp/app.min.js
+          cmp -s /tmp/app.min.js app.min.js || {
+            echo "::error::app.min.js is stale. Run: npx --yes terser@5 app.js --compress --mangle --format ascii_only=true,comments=false -o app.min.js"
+            exit 1
+          }
 
       - name: Validate JSON (manifest)
         run: node -e "JSON.parse(require('fs').readFileSync('site.webmanifest','utf8'))"
