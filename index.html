@@ -85,6 +85,28 @@
 
   <link rel="stylesheet" href="styles.min.css?v=20260606-4" />
 
+  <style>
+  /* Donation buttons */
+  .group.donate { display: flex; gap: 8px; align-items: center; }
+  .group.donate .donate-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: inherit;
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .donate-icon { width: 18px; height: 18px; display: inline-block; }
+  .donate-btn .donate-text { line-height: 1; }
+  .group.donate .donate-btn:hover { background: rgba(255,255,255,0.03); }
+  @media (max-width:700px) { .group.donate .donate-btn { padding: 6px 8px; font-size: 13px } }
+  </style>
+
   <!-- The app shell is small; PDF.js/pdf-lib are vendored locally and lazy-loaded on first use. -->
   <script src="app.min.js?v=20260606-2" defer></script>
 </head>
@@ -144,6 +166,16 @@
 
     <div class="group">
       <button id="btnDownload" class="btn success" title="Download edited PDF" disabled>⬇ Download</button>
+    </div>
+    <div class="group donate">
+      <a class="donate-btn" href="https://buymeacoffee.com/igorcouto" target="_blank" rel="noopener noreferrer" aria-label="Support on Buy Me A Coffee">
+        <img src="buy-me-a-coffe.svg" alt="Buy Me a Coffee" class="donate-icon" aria-hidden="true">
+        <span class="donate-text">Buy me a coffee</span>
+      </a>
+      <a class="donate-btn" href="https://ko-fi.com/igorcouto" target="_blank" rel="noopener noreferrer" aria-label="Support on Ko-fi">
+        <img src="kofi.svg" alt="Ko-fi" class="donate-icon" aria-hidden="true">
+        <span class="donate-text">Ko-fi</span>
+      </a>
     </div>
   </header>
 
