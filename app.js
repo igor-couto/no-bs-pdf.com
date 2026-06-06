@@ -13,8 +13,73 @@
 (() => {
   'use strict';
 
-  const { pdfjsLib } = window;
-  const PDFLib = window.PDFLib;
+  const ASSET_VERSION_FALLBACK = '20260606';
+  const currentScript = document.currentScript;
+  const assetVersion = (() => {
+    if (!currentScript || !currentScript.src) return ASSET_VERSION_FALLBACK;
+    try {
+      return new URL(currentScript.src, window.location.href).searchParams.get('v') || ASSET_VERSION_FALLBACK;
+    } catch {
+      return ASSET_VERSION_FALLBACK;
+    }
+  })();
+  const assetUrl = (path) => `${path}?v=${encodeURIComponent(assetVersion)}`;
+
+  let pdfjsLib = window.pdfjsLib || null;
+  let PDFLib = window.PDFLib || null;
+  let pdfRuntimeReady = null;
+  let pdfRuntimeConfigured = false;
+  let workerObjectUrl = null;
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = false;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function configurePdfWorker() {
+    const workerUrl = assetUrl('vendor/pdf.worker.min.js');
+    try {
+      const blob = await fetch(workerUrl).then((r) => { if (!r.ok) throw 0; return r.blob(); });
+      if (workerObjectUrl) URL.revokeObjectURL(workerObjectUrl);
+      workerObjectUrl = URL.createObjectURL(blob);
+      pdfjsLib.GlobalWorkerOptions.workerSrc = workerObjectUrl;
+    } catch {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
+    }
+  }
+
+  async function ensurePdfRuntime() {
+    if (pdfRuntimeConfigured) return;
+    if (!pdfRuntimeReady) {
+      pdfRuntimeReady = (async () => {
+        if (!pdfjsLib) {
+          await loadScript(assetUrl('vendor/pdf.min.js'));
+          pdfjsLib = window.pdfjsLib || null;
+        }
+        if (!PDFLib) {
+          await loadScript(assetUrl('vendor/pdf-lib.min.js'));
+          PDFLib = window.PDFLib || null;
+        }
+        if (!pdfjsLib || !PDFLib) throw new Error('PDF tools failed to initialize.');
+        await configurePdfWorker();
+        pdfRuntimeConfigured = true;
+      })().catch((e) => {
+        pdfRuntimeReady = null;
+        throw e;
+      });
+    }
+    await pdfRuntimeReady;
+  }
+
+  function isRuntimeLoadError(e) {
+    return /PDF tools failed|Failed to load vendor\//.test(e && e.message ? e.message : '');
+  }
 
   // ---------------------------------------------------------------- state ---
   const state = {
@@ -315,7 +380,9 @@
 
   async function openPdf(file) {
     try {
-      toast('Reading PDF…', 'busy', 0);
+      toast('Loading PDF tools...', 'busy', 0);
+      await ensurePdfRuntime();
+      toast('Reading PDF...', 'busy', 0);
       const bytes = new Uint8Array(await file.arrayBuffer());
       const { id, pdfjsDoc } = await loadAsSource(bytes);
       // reset document state
@@ -336,13 +403,21 @@
       toast(`Loaded ${pdfjsDoc.numPages} page${pdfjsDoc.numPages > 1 ? 's' : ''}.`, '', 1600);
     } catch (e) {
       console.error(e);
-      toast('Could not read that PDF. Is it valid / unencrypted?', 'error', 4000);
+      toast(
+        isRuntimeLoadError(e)
+          ? 'Could not load PDF tools. Check your connection and try again.'
+          : 'Could not read that PDF. Is it valid / unencrypted?',
+        'error',
+        4000
+      );
     }
   }
 
   async function mergePdf(file) {
     try {
-      toast('Appending PDF…', 'busy', 0);
+      toast('Loading PDF tools...', 'busy', 0);
+      await ensurePdfRuntime();
+      toast('Appending PDF...', 'busy', 0);
       const bytes = new Uint8Array(await file.arrayBuffer());
       const { id, pdfjsDoc } = await loadAsSource(bytes);
       pushHistory();
@@ -352,7 +427,13 @@
       updateButtons();
     } catch (e) {
       console.error(e);
-      toast('Could not append that PDF.', 'error', 3500);
+      toast(
+        isRuntimeLoadError(e)
+          ? 'Could not load PDF tools. Check your connection and try again.'
+          : 'Could not append that PDF.',
+        'error',
+        3500
+      );
     }
   }
 
@@ -561,9 +642,11 @@
   function autosizeTextarea() {
     const ta = dom.textEditor;
     ta.style.height = 'auto';
-    ta.style.height = ta.scrollHeight + 'px';
     ta.style.width = 'auto';
-    ta.style.width = Math.max(20, ta.scrollWidth + 4) + 'px';
+    const height = ta.scrollHeight;
+    const width = ta.scrollWidth;
+    ta.style.height = height + 'px';
+    ta.style.width = Math.max(20, width + 4) + 'px';
   }
   dom.textEditor.addEventListener('input', autosizeTextarea);
   dom.textEditor.addEventListener('keydown', (e) => {
@@ -690,7 +773,8 @@
   async function downloadPdf() {
     try {
       if (!dom.textEditor.hidden) commitText();
-      toast('Building your PDF…', 'busy', 0);
+      await ensurePdfRuntime();
+      toast('Building your PDF...', 'busy', 0);
       const out = await PDFLib.PDFDocument.create();
       const font = await out.embedFont(PDFLib.StandardFonts.Helvetica);
 
@@ -885,15 +969,7 @@
   window.addEventListener('resize', () => { if (state.pages.length) drawOverlay(); });
 
   // ----------------------------------------------------------- bootstrap ---
-  async function init() {
-    if (!pdfjsLib || !PDFLib) { toast('Libraries failed to load. Check your connection.', 'error', 8000); return; }
-    // Worker is vendored locally. Wrap it in a same-origin blob so the real (off-main-thread)
-    // worker runs even when the page is opened over file://; fall back to main-thread otherwise.
-    const workerUrl = 'vendor/pdf.worker.min.js';
-    try {
-      const blob = await fetch(workerUrl).then((r) => { if (!r.ok) throw 0; return r.blob(); });
-      pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
-    } catch { pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl; }
+  function init() {
     setTool('select');
     updateButtons();
   }
