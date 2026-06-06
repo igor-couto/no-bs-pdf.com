@@ -83,7 +83,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="styles.css?v=20260606-2" />
+  <link rel="stylesheet" href="styles.css?v=20260606-3" />
 
   <!-- The app shell is small; PDF.js/pdf-lib are vendored locally and lazy-loaded on first use. -->
   <script src="app.min.js?v=20260606-2" defer></script>
@@ -147,7 +147,7 @@
     </div>
   </header>
 
-  <main id="workspace" hidden>
+  <div id="workspace" role="main" hidden>
     <aside id="sidebar">
       <div class="sidebar-head">
         <span>Pages</span>
@@ -189,9 +189,9 @@
         </div>
       </div>
     </section>
-  </main>
+  </div>
 
-  <section id="dropzone">
+  <main id="dropzone">
     <div class="landing">
       <div class="hero" id="hero">
         <div class="dz-icon" aria-hidden="true">📄</div>
@@ -257,7 +257,7 @@
         <p><strong>No BS PDF Editor ©</strong>  2026 All Rights Reserved.</p>
       </footer>
     </div>
-  </section>
+  </main>
 
   <div id="toast" hidden></div>
 </body>

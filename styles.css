@@ -7,6 +7,8 @@
   --muted: #9aa3b2;
   --accent: #4f8cff;
   --accent-2: #3b6fd6;
+  --control-accent: #1f5fd1;
+  --control-accent-2: #174ea6;
   --success: #2faa6a;
   --danger: #e2503b;
   --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
@@ -64,16 +66,18 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 .btn:active:not(:disabled), .tool:active, .mini:active { transform: translateY(1px); }
 
-.btn.primary { background: var(--accent); border-color: var(--accent-2); }
-.btn.primary:hover { background: var(--accent-2); }
+.btn.primary { background: var(--control-accent); border-color: var(--control-accent-2); color: var(--text); }
+.btn.primary:hover:not(:disabled) { background: var(--control-accent-2); border-color: #123f86; }
 .btn.success { background: var(--success); border-color: #28935b; }
 .btn.success:hover:not(:disabled) { background: #28935b; }
 
 .tool.active {
-  background: var(--accent);
-  border-color: var(--accent-2);
-  box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.25);
+  background: var(--control-accent);
+  border-color: var(--control-accent-2);
+  color: var(--text);
+  box-shadow: 0 0 0 2px rgba(31, 95, 209, 0.28);
 }
+.tool.active:hover:not(:disabled) { background: var(--control-accent-2); border-color: #123f86; }
 
 .props { gap: 12px; }
 .prop { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
