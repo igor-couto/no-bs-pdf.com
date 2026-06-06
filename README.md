@@ -102,7 +102,8 @@ The page is built to be indexed well even though it's a single client-side app:
 - Real, crawlable content: a single `<h1>`, a clean `<h2>` outline, feature/how-to
   sections and an FAQ describing what the tool does.
 - `robots.txt`, `sitemap.xml`, and a PWA `site.webmanifest` (installable, theme-colored).
-- Fast first paint: the libraries load with `defer`, so they never block rendering.
+- Fast first paint: the app shell loads first, and the vendored PDF libraries are
+  lazy-loaded only when a document is opened.
 
 ### ⚠️ Before you deploy: set your domain
 
