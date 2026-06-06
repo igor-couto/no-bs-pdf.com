@@ -1,5 +1,9 @@
 # no-bs-pdf
 
+[![CI](https://github.com/igor.couto/no-bs-pdf.com/actions/workflows/cicd.yml/badge.svg)](https://github.com/igor.couto/no-bs-pdf.com/actions/workflows/cicd.yml)
+
+![Preview](docs/preview.png)
+
 A private, **fully client-side** PDF editor. Open a PDF, mark it up, reorganize pages,
 and download the result. Your file is read, edited, and saved entirely in the browser —
 **it is never uploaded to any server.** No cookies, no tracking, no accounts, no storage.
