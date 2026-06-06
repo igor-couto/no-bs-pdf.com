@@ -1,6 +1,6 @@
 # no-bs-pdf
 
-[![CI](https://github.com/igor.couto/no-bs-pdf.com/actions/workflows/cicd.yml/badge.svg)](https://github.com/igor.couto/no-bs-pdf.com/actions/workflows/cicd.yml)
+[![CI](https://github.com/igor.couto/no-bs-pdf/actions/workflows/cicd.yml/badge.svg)](https://github.com/igor.couto/no-bs-pdf/actions/workflows/cicd.yml)
 
 ![Preview](docs/preview.png)
 
